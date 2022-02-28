@@ -1,0 +1,25 @@
+{
+    "name": "matiria",
+    "displayName": "Matiria",
+    "description": "Syntax highlighting for Matira Programming Language",
+    "version": "1.0.0",
+    "engines": {
+        "vscode": "^1.64.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "matiria",
+            "aliases": ["Matiria", "matiria"],
+            "extensions": [".mtr"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "matiria",
+            "scopeName": "source.matiria",
+            "path": "./syntaxes/matiria.tmLanguage.json"
+        }]
+    }
+}
