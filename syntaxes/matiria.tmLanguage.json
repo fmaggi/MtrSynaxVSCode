@@ -1,222 +1,184 @@
 {
-    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-    "name": "matiria",
-    "patterns": [{ "include": "#statement" }, { "include": "#expression" }],
-    "repository": {
-      "statement": {
-        "patterns": [
-          { "include": "#function-declaration" },
-          { "include": "#statement-keyword" },
-          { "include": "#assignment-operator" }
-        ]
-      },
-      "comments": {
-        "patterns": [
-          {
-            "name": "comment.line.hash.matiria",
-            "match": "#.*"
-          }
-        ]
-      },
-      "statement-keyword": {
-        "patterns": [
-          {
-            "name": "storage.type.function.matiria",
-            "match": "\\b(fn)\\b"
-          },
-          {
-            "name": "keyword.control.flow.matiria",
-            "match": "\\b(if|else|while|for|break|continue|return)\\b"
-          }
-        ]
-      },
-      "expression-bare": {
-        "patterns": [
-          { "include": "#literal" },
-          { "include": "#string" },
-          { "include": "#illegal-operator" },
-          { "include": "#operator" },
-          { "include": "#round-braces" },
-          { "include": "#function-call" },
-          { "include": "#builtin-functions" },
-          { "include": "#illegal-names" },
-          { "include": "#constants" }
-        ]
-      },
-      "expression": {
-        "patterns": [
-          { "include": "#comments" },
-          { "include": "#expression-bare" }
-        ]
-      },
-      "constants": {
-        "name": "constant.other.caps.matiria",
-        "match": "\\b(_* [[:upper:]] [_\\d]* [[:upper:]]) [[:upper:]\\d]* (_\\w*)?\\b"
-      },
-      "round-braces": {
-        "begin": "(\\()",
-        "end": "(\\))",
-        "beginCaptures": {
-          "1": { "name": "punctuation.parenthesis.begin.matiria" }
-        },
-        "endCaptures": {
-          "1": { "name": "punctuation.parenthesis.end.matiria" }
-        },
-        "patterns": [{ "include": "#expression" }]
-      },
-      "assignment-operator": {
-        "name": "keyword.operator.assignment.matiria",
-        "match": ":="
-      },
-      "operator": {
-        "match": "\\b(&& | \\|\\| | !)(?!\\s*:)\b | (<< | >> | & | \\| | \\^ | ~) | (\\* | \\+ | - | % | / | //) | (!= | = | >= | <= | < | >)",
-        "captures": {
-          "1": { "name": "keyword.operator.logical.matiria" },
-          "2": { "name": "keyword.operator.bitwise.matiria" },
-          "3": { "name": "keyword.operator.arithmetic.matiria" },
-          "4": { "name": "keyword.operator.comparison.matiria" }
-        }
-      },
-      "literal": {
-        "patterns": [
-          { "name": "constant.language.matiria", "match": "\\b(true|false)\\b" },
-          { "include": "#number" }
-        ]
-      },
-      "number": {
-        "name": "constant.numeric.matiria",
-        "patterns": [
-          { "include": "#number-dec" },
-          { "include": "#number-hex" },
-          { "include": "#number-oct" },
-          { "include": "#number-bin" },
-          { "name": "invalid.illegal.name.matiria", "match": "\\b[0-9]+\\w+" }
-        ]
-      },
-      "number-dec": {
-        "name": "constant.numeric.dec.matiria",
-        "match": "(?<![\\w\\.])[0-9](_?[0-9])*\\b"
-      },
-      "number-hex": {
-        "name": "constant.numeric.hex.matiria",
-        "match": "(?<![\\w\\.])(0[xX])(_?[0-9a-fA-F])+\\b",
-        "captures": { "1": { "name": "storage.type.number" } }
-      },
-      "number-oct": {
-        "name": "constant.numeric.hex.matiria",
-        "match": "(?<![\\w\\.])(0[oO])(_?[0-7])+\\b",
-        "captures": { "1": { "name": "storage.type.number" } }
-      },
-      "number-bin": {
-        "name": "constant.numeric.bin.matiria",
-        "match": "(?<![\\w\\.])(0[bB])(_?[01])+\\b",
-        "captures": { "1": { "name": "storage.type.number" } }
-      },
-      "string": {
-        "name": "string.quoted.double.matiria",
-        "begin": "\"",
-        "end": "\"",
-        "patterns": [
-          {
-            "name": "constant.character.escape.matiria",
-            "match": "\\\\."
-          }
-        ]
-      },
-      "function-declaration": {
-        "name": "meta.function.matiria",
-        "begin": "\\s*(fn)\\s+(?= [[:alpha:]_][[:word:]]*\\s*\\()",
-        "end": "{",
-        "beginCaptures": { "1": { "name": "storage.type.function.matiria" } },
-        "patterns": [
-          { "include": "#function-declaration-name" },
-          { "include": "#parameters" }
-        ]
-      },
-      "function-declaration-name": {
-        "patterns": [
-          { "include": "#illegal-names" },
-          {
-            "name": "entity.name.function.matiria",
-            "match": "\\b([[:alpha:]_]\\w*)\\b"
-          }
-        ]
-      },
-      "parameters": {
-        "name": "meta.function.parameters.matiria",
-        "begin": "(\\()",
-        "end": "(\\))",
-        "beginCaptures": {
-          "1": { "name": "punctuation.definition.parameters.begin.matiria" }
-        },
-        "endCaptures": {
-          "1": { "name": "punctuation.definition.parameters.end.matiria" }
-        },
-        "patterns": [
-          { "include": "#illegal-names" },
-          {
-            "match": "(?x) ([[:alpha:]_]\\w*)\\s* (?: (,) | (?=[)\n]))",
-            "captures": {
-              "1": { "name": "variable.parameter.function.language.matiria" },
-              "2": { "name": "punctuation.seperator.parameters.matiria" }
-            }
-          }
-        ]
-      },
-      "function-call": {
-        "name": "meta.function-call.matiria",
-        "begin": "\\b(?=([[:alpha:]_]\\w*)\\s*(\\())",
-        "end": "(\\))",
-        "endCaptures": {
-          "1": { "name": "punctuation.definition.arguments.end.matiria" }
-        },
-        "patterns": [
-          { "include": "#function-name" },
-          { "include": "#function-arguments" }
-        ]
-      },
-      "function-name": {
-        "patterns": [
-          { "include": "#builtin-functions" },
-          {
-            "name": "entity.name.function.matiria",
-            "match": "\\b([[:alpha:]_]\\w*)\\b"
-          }
-        ]
-      },
-      "function-arguments": {
-        "begin": "(\\()",
-        "end": "(?=\\))(?!\\)\\s*\\()",
-        "beginCaptures": {
-          "1": { "name": "punctuation.definition.arguments.begin.matiria" }
-        },
-        "contentName": "meta.function-call.arguments.matiria",
-        "patterns": [
-          { "name": "punctuation.seperator.arguments.matiria", "match": "(,)" },
-          { "include": "#illegal-names" },
-          { "include": "#expression" },
-          {
-            "match": "\\s*(\\))\\s*(\\()",
-            "captures": {
-              "1": { "name": "punctuation.definition.arguments.end.matiria" },
-              "2": { "name": "punctuation.definition.arguments.begin.matiria" }
-            }
-          }
-        ]
-      },
-      "illegal-names": {
-        "name": "keyword.control.flow.matiria",
-        "match": "\\b(fn | else | for | if | break | continue | return | while)\\b"
-      },
-      "illegal-operator": {
-        "patterns": [
-          {
-            "name": "invalid.illegal.operator.matiria",
-            "match": "&&|\\|\\||--|\\+\\+|[?$]"
-          },
-          { "name": "invalid.illegal.operator.matiria", "match": "!\\b" }
-        ]
-      }
-    },
-    "scopeName": "source.matiria"
-  }
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "matiria",
+	"scopeName": "source.matiria",
+    "patterns": [{ "include": "#function-declarataion" }, {"include": "#comments"}],
+	"repository": {
+		"function-declarataion": {
+			"patterns": [
+				{
+					"comment": "Function Declaration",
+					"name": "meta.function.matiria",
+					"begin": "\\b(fn)\\s+([A-Za-z_][A-Za-z_0_9]*)\\b",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.other.function.matiria"
+						},
+						"2": {
+							"name": "entity.name.function.matiria"
+						}
+					},
+					"end": "}",
+					"patterns": [
+						{ "include": "#comments" },
+						{ "include": "#statements" },
+						{
+							"comment": "Function parameters",
+							"name": "meta.function.parameter.matiria",
+							"begin": "\\(",
+							"end": "\\)",
+							"patterns": [
+								{
+									"name": "meta.function.paramter.matira",
+									"match": "\\b([A-Za-z_][A-Za-z_0_9]*)\\s+([A-Za-z_][A-Za-z_0_9]*)\\s*(,?)",
+									"captures": {
+										"1": {
+											"name": "entity.name.type.matiria"
+										},
+										"2": {
+											"name": "variable.other.matiria"
+										},
+										"3": {
+											"name": "keyword.operator.matiria"
+										}
+									}
+								}
+							]
+
+						}
+					]
+				}
+			]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"comment": "Line Comments",
+					"name": "comment.line.hash.matiria",
+					"match": "#.*"
+				}
+			]
+		},
+		"statements": {
+			"patterns": [
+				{ "include": "#control-flow" },
+				{ "include": "#varibale-declaration" },
+				{ "include": "#assignment"}
+			]
+		},
+		"control-flow": {
+			"patterns": [
+				{
+					"comment": "Control flow",
+					"name": "meta.control.matiria",
+					"begin": "\\b((if)|(while))\\b",
+					"beginCaptures": {
+						"1": {
+							"name": "keyword.control.matiria"
+						}
+					},
+					"end": "}",
+					"patterns": [
+						{ "include": "#comments" },
+						{ "include": "#statements"},
+						{
+							"comment": "Control flow condition",
+							"name": "meta.condition.matiria",
+							"begin": "\\(",
+							"end": "\\)",
+							"patterns": [
+								{ "include": "#expressions" }
+							]
+						}
+					]
+				}
+			]
+		},
+		"varibale-declaration": {
+			"patterns": [
+				{
+					"comment": "Variable Declaration",
+					"name": "meta.variable.matiria",
+					"begin": "^\\s*([A-Za-z_][A-Za-z_0_9]*)\\s+([A-Za-z_][A-Za-z_0_9]*)",
+					"beginCaptures": {
+						"1": {
+							"name": "entity.name.type.matiria"
+						},
+						"2": {
+							"name": "variable.other.matiria"
+						}
+					},
+					"end": ";",
+					"patterns": [
+						{"include": "#expressions"}
+					]
+				}
+			]
+		},
+		"assignment": {
+			"patterns": [
+				{
+					"comment": "Assignment",
+					"name": "meta.assignment.matiria",
+					"begin": "^\\s*([A-Za-z_][A-Za-z_0_9]*)\\s*(:=)",
+					"beginCaptures": {
+						"1": {
+							"name": "variable.other.matiria"
+						},
+						"2": {
+							"name": "keyword.operator.matiria"
+						}
+					},
+					"end": ";",
+					"patterns": [
+						{"include": "#expressions"}
+					]
+				}
+			]
+		},
+		"expressions": {
+			"patterns": [
+				{ "include": "#variables" },
+				{ "include": "#literals" }
+			]
+		},
+		"variables": {
+			"patterns": [
+				{
+					"comment": "Variables",
+					"name": "variable.other.matiria",
+					"match": "\\b[A-Za-z_][A-Za-z_0-9]*\\b"
+				}
+			]
+		},
+		"literals": {
+			"patterns": [
+				{ "include": "#numbers" },
+				{ "include": "#booleans"}
+			]
+		},
+		"numbers": {
+			"patterns": [
+				{
+					"comment": "Decimal integeres and floating point",
+					"name": "constant.numeric",
+					"match": "\\b[0-9]+(\\.[0-9]*)?\\b"
+				}
+			]
+		},
+		"booleans": {
+			"patterns": [
+				{
+					"comment": "Booleans",
+					"name": "keyword.other.boolean.matiria",
+					"match": "\\b(true)\\b",
+					"captures": {
+						"1": {
+							"name": "keyword.other.boolean.matiria"
+						}
+					}
+				}
+			]
+		}
+	}
+}
